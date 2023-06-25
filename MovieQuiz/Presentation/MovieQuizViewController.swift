@@ -46,6 +46,7 @@ final class MovieQuizViewController: UIViewController {
 
     private var currentQuestionIndex = 0
     private var correctAnswers = 0
+    private var areButtonsEnabled = true
 
     @IBOutlet private var imageView: UIImageView!
     @IBOutlet private var textLabel: UILabel!
@@ -54,24 +55,33 @@ final class MovieQuizViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        imageView.layer.cornerRadius = 8
+        imageView.layer.cornerRadius = 20
 
         let currentQuestion = convert(model: questions[currentQuestionIndex])
         show(quiz: currentQuestion)
     }
 
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        let currentQuestion = questions[currentQuestionIndex] // 1
-            let givenAnswer = true // 2
+        let currentQuestion = questions[currentQuestionIndex]
+        let givenAnswer = true
+        sender.isEnabled = false
 
-            showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            sender.isEnabled = true
+        }
+
+        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
 
     @IBAction private func noButtonClicked(_ sender: UIButton) {
         let currentQuestion = questions[currentQuestionIndex]
-            let givenAnswer = false
+        let givenAnswer = false
+        sender.isEnabled = false
 
-            showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            sender.isEnabled = true
+        }
+        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
 
     private func show(quiz step: QuizStepViewModel) {
@@ -141,7 +151,6 @@ final class MovieQuizViewController: UIViewController {
             show(quiz: viewModel)
         }
     }
-
 }
 
 struct QuizQuestion {
