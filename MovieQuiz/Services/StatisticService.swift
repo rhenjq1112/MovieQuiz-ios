@@ -14,8 +14,8 @@ private enum Keys: String {
 protocol StatisticService {
     func store(correct count: Int, total amount: Int)
     var totalAccuracy: Double { get } // точность
-    var gamesCount: Int { get } //кол-во игр
-    var bestGame: GameRecord { get } //дучшая игра
+    var gamesCount: Int { get set } //кол-во игр
+    var bestGame: GameRecord { get set} //лучшая игра
 }
 
 final class StatisticServiceImplementation: StatisticService {
@@ -44,7 +44,6 @@ final class StatisticServiceImplementation: StatisticService {
             let record = try? JSONDecoder().decode(GameRecord.self, from: data) else {
                 return .init(correct: 0, total: 0, date: Date())
             }
-
             return record
         }
 
@@ -58,8 +57,11 @@ final class StatisticServiceImplementation: StatisticService {
     }
 
     func store(correct count: Int, total amount: Int) {
-        userDefaults.set(count, forKey: Keys.correct.rawValue)
-        userDefaults.set(amount, forKey: Keys.total.rawValue)
+        let total = userDefaults.integer(forKey: Keys.total.rawValue)
+        let correct = userDefaults.integer(forKey: Keys.correct.rawValue)
+
+        userDefaults.set(correct + count, forKey: Keys.correct.rawValue)
+        userDefaults.set(total + amount, forKey: Keys.total.rawValue)
 
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .short
