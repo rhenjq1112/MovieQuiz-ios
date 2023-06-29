@@ -12,10 +12,10 @@ private enum Keys: String {
 }
 
 protocol StatisticService {
-    func store(correct count: Int, total amount: Int)
     var totalAccuracy: Double { get } // точность
     var gamesCount: Int { get set } //кол-во игр
     var bestGame: GameRecord { get set} //лучшая игра
+    func store(correct count: Int, total amount: Int)
 }
 
 final class StatisticServiceImplementation: StatisticService {
@@ -49,7 +49,6 @@ final class StatisticServiceImplementation: StatisticService {
 
         set {
             guard let data = try? JSONEncoder().encode(newValue) else {
-                print("Невозможно сохранить результат")
                 return
             }
             userDefaults.set(data, forKey: Keys.bestGame.rawValue)
