@@ -25,6 +25,8 @@ class AlertPresenter {
             result.completion?()
         }
 
+        alert.view.accessibilityIdentifier = "Game results"
+
         alert.addAction(action)
         presentingViewController?.present(alert, animated: true)
     }
